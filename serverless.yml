@@ -1,0 +1,316 @@
+service: ${self:custom.project}-api-${self:custom.version}
+useDotenv: true
+frameworkVersion: ^2.51.2
+variablesResolutionMode: 20210326
+
+custom:
+  group: 'Your Dev Life'
+  subGroup: 'Clients'
+  project: 'Duplica'
+  stage: ${self:provider.stage}
+  version: '0.0.1'
+  output:
+    file: .serverless/output.json
+  functionsBasePath: .build/src/handlers
+  dynamodb:
+    stages:
+      - local
+      - dev
+      - prod
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+      seed: true
+    seed:
+      local:
+        sources:
+          - table: DUPLICA-local
+            sources:
+              - ./.build/src/database/seed/companies.js
+              - ./.build/src/database/seed/factories.js
+              - ./.build/src/database/seed/clients.js
+              - ./.build/src/database/seed/cessions.js
+              - ./.build/src/database/seed/iofs.js
+              - ./.build/src/database/seed/quotes.js
+              - ./.build/src/database/seed/transactions.js
+              - ./.build/src/database/seed/duplicates.js
+    migration:
+      dir: offline/migrations
+  region:
+    local: localhost
+    dev: ap-southeast-2
+    stg: ap-southeast-2
+    prod: ap-southeast-2
+  associateWaf:
+    name: ${opt:stage, 'dev'}-${self:custom.project}-acl
+    version: V2
+
+plugins:
+  - serverless-functions-base-path
+  - serverless-dynamodb-local
+  - serverless-offline
+  - serverless-jest-plugin
+  - serverless-newrelic-lambda-layers
+  - serverless-associate-waf
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: ap-southeast-2
+  stage: ${opt:stage, 'dev'}
+  lambdaHashingVersion: 20201221
+  logs:
+    restApi: true
+  stackTags:
+    Group: '${self:custom.group}'
+    SubGroup: '${self:custom.subGroup}'
+    Project: '${self:custom.project}'
+  environment:
+    DUPLICA_TABLE: DUPLICA-${opt:stage, 'dev'}
+    REGION: ${self:custom.region.${opt:stage, 'dev'}}
+    STAGE: ${opt:stage, 'local'}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:BatchWriteItem
+          Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DUPLICA_TABLE}'
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+          Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DUPLICA_TABLE}/index/*'
+
+functions:
+  health:
+    handler: src/handlers/health/health.get
+    events:
+      - http:
+          path: health
+          method: get
+          cors: true
+
+  getTokens:
+    handler: src/handlers/auth/auth.get
+    events:
+      - http:
+          path: auth/tokens
+          method: get
+          cors: true
+
+resources:
+  Resources:
+    DuplicaTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:provider.environment.DUPLICA_TABLE}
+        KeySchema:
+          - AttributeName: PK
+            KeyType: HASH
+          - AttributeName: SK
+            KeyType: RANGE
+        AttributeDefinitions:
+          - AttributeName: PK
+            AttributeType: S
+          - AttributeName: SK
+            AttributeType: S
+          - AttributeName: GSI1PK
+            AttributeType: S
+          - AttributeName: GSI1SK
+            AttributeType: S
+          - AttributeName: GSI2PK
+            AttributeType: S
+          - AttributeName: GSI2SK
+            AttributeType: S
+          - AttributeName: GSI3PK
+            AttributeType: S
+          - AttributeName: GSI3SK
+            AttributeType: S
+          - AttributeName: GSI4PK
+            AttributeType: S
+          - AttributeName: GSI4SK
+            AttributeType: S
+          - AttributeName: GSI5PK
+            AttributeType: S
+          - AttributeName: GSI5SK
+            AttributeType: S
+          - AttributeName: GSI6PK
+            AttributeType: S
+          - AttributeName: GSI6SK
+            AttributeType: S
+          - AttributeName: GSI7PK
+            AttributeType: S
+          - AttributeName: GSI7SK
+            AttributeType: S
+          - AttributeName: GSI8PK
+            AttributeType: S
+          - AttributeName: GSI8SK
+            AttributeType: S
+          - AttributeName: GSI9PK
+            AttributeType: S
+          - AttributeName: GSI9SK
+            AttributeType: S
+          - AttributeName: GSI10PK
+            AttributeType: S
+          - AttributeName: GSI10SK
+            AttributeType: S
+          - AttributeName: GSI11PK
+            AttributeType: S
+          - AttributeName: GSI11SK
+            AttributeType: S
+          - AttributeName: GSI12PK
+            AttributeType: S
+          - AttributeName: GSI12SK
+            AttributeType: S
+        GlobalSecondaryIndexes:
+          - IndexName: TransactionsByFactoryId
+            KeySchema:
+              - AttributeName: GSI1PK
+                KeyType: HASH
+              - AttributeName: GSI1SK
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: FactoryByName
+            KeySchema:
+              - AttributeName: GSI2PK
+                KeyType: HASH
+              - AttributeName: GSI2SK
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: ClientByName
+            KeySchema:
+              - AttributeName: GSI3PK
+                KeyType: HASH
+              - AttributeName: GSI3SK
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: CessionsByClientId
+            KeySchema:
+              - AttributeName: GSI4PK
+                KeyType: HASH
+              - AttributeName: GSI4SK
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: QuotesByFactoryId
+            KeySchema:
+              - AttributeName: GSI5PK
+                KeyType: HASH
+              - AttributeName: GSI5SK
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: IofsByDueDate
+            KeySchema:
+              - AttributeName: GSI6PK
+                KeyType: HASH
+              - AttributeName: GSI6SK
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: DuplicatesByStatus
+            KeySchema:
+              - AttributeName: GSI7PK
+                KeyType: HASH
+              - AttributeName: GSI7SK
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: DuplicatesByFactoryId
+            KeySchema:
+              - AttributeName: GSI8PK
+                KeyType: HASH
+              - AttributeName: GSI8SK
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: DuplicatesByClientId
+            KeySchema:
+              - AttributeName: GSI9PK
+                KeyType: HASH
+              - AttributeName: GSI9SK
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: DuplicatesByTransactionId
+            KeySchema:
+              - AttributeName: GSI10PK
+                KeyType: HASH
+              - AttributeName: GSI10SK
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: DuplicatesByCessionId
+            KeySchema:
+              - AttributeName: GSI11PK
+                KeyType: HASH
+              - AttributeName: GSI11SK
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: DuplicatesByQuoteId
+            KeySchema:
+              - AttributeName: GSI12PK
+                KeyType: HASH
+              - AttributeName: GSI12SK
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+        BillingMode: PAY_PER_REQUEST
+
+    WebACL:
+      Type: AWS::WAFv2::WebACL
+      Properties:
+        Name: !Sub "${opt:stage, 'dev'}-${self:custom.project}-acl"
+        DefaultAction:
+          Block: { }
+        Description: !Sub "${opt:stage, 'dev'}-${self:custom.project}-acl"
+        Scope: REGIONAL
+        Tags:
+          - Key: Group
+            Value: '${self:custom.group}'
+          - Key: SubGroup
+            Value: '${self:custom.subGroup}'
+          - Key: Project
+            Value: '${self:custom.project}'
+        Rules:
+          - Name: !Sub "${opt:stage, 'dev'}-${self:custom.project}-common-ruleset"
+            Priority: 0
+            Statement:
+              ManagedRuleGroupStatement:
+                VendorName: AWS
+                Name: AWSManagedRulesCommonRuleSet
+            OverrideAction:
+              None: { }
+            VisibilityConfig:
+              SampledRequestsEnabled: true
+              CloudWatchMetricsEnabled: true
+              MetricName: !Sub "${opt:stage, 'dev'}-${self:custom.project}-common-ruleset"
+          - Name: !Sub "${opt:stage, 'dev'}-${self:custom.project}-kbi-ruleset"
+            Priority: 1
+            Statement:
+              ManagedRuleGroupStatement:
+                VendorName: AWS
+                Name: AWSManagedRulesKnownBadInputsRuleSet
+            OverrideAction:
+              None: { }
+            VisibilityConfig:
+              SampledRequestsEnabled: true
+              CloudWatchMetricsEnabled: true
+              MetricName: !Sub "${opt:stage, 'dev'}-${self:custom.project}-kbi-ruleset"
+        VisibilityConfig:
+          SampledRequestsEnabled: true
+          CloudWatchMetricsEnabled: true
+          MetricName: !Sub "${opt:stage, 'dev'}-${self:custom.project}-acl"
