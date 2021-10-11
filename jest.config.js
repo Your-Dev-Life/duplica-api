@@ -18,7 +18,14 @@ module.exports = recursive(tsJestPreset.jsWithTsESM, dynamodbPreset, {
     },
   },
   collectCoverageFrom: ['**/*.ts'],
-  coveragePathIgnorePatterns: ['.d.ts', '<rootDir>/node_modules/', 'health.ts', 'test/', 'database/seed/'],
+  coveragePathIgnorePatterns: [
+    '.d.ts',
+    '<rootDir>/node_modules/',
+    'health.ts',
+    'test/',
+    'database/seed/',
+    'database/client.ts',
+  ],
   resetMocks: true,
   restoreMocks: true,
 });

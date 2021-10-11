@@ -1,6 +1,5 @@
-const { dinero, toSnapshot } = require('dinero.js');
-const { BRL } = require('@dinero.js/currencies');
-const { Entity, DuplicateStatus } = require('../../repositories/entity');
+import { dinero, toSnapshot } from 'dinero.js';
+import { BRL } from '@dinero.js/currencies';
 const factories = require('./factories');
 const clients = require('./clients');
 const transactions = require('./transactions');
@@ -27,7 +26,7 @@ const iofValue2 = dinero({ amount: 852, currency: BRL }); // It represents R$8,5
 const interestValue2 = dinero({ amount: 519, currency: BRL }); // It represents R$5,19
 const netValue2 = dinero({ amount: 169883, currency: BRL }); // It represents R$1.698,83
 const totalValue2 = dinero({ amount: 178500, currency: BRL }); // It represents R$1.785,00
-const factory2 = factories[1];
+const factory2 = factories[0];
 const client2 = clients[1];
 const transaction2 = transactions[1];
 const cession2 = cessions[1];
@@ -38,14 +37,14 @@ const duplicates: Entity.Duplicate[] = [
     PK: 'COMPANY#ID#81e1102c-416d-4442-9349-351ae403e0b8',
     SK: 'DUPLICATE#ID#8a980083-a90c-4d23-842e-e821c530842b',
     Id: '8a980083-a90c-4d23-842e-e821c530842b',
-    Entity: Entity.Duplicate,
-    Status: DuplicateStatus.done,
+    Entity: EntityTypesEnum.Duplicate,
+    Status: DuplicateStatus.DONE,
     DuplicateNumber: '4648001',
     DuplicateDate: '2021-05-07',
     DueDate: dueDate1,
     PaymentDate: '2021-01-31',
     BankNumber: '',
-    Desagio: 15,
+    Desagio: BigInt(15),
     DesagioValue: toSnapshot(desagioValue1),
     CostValue: toSnapshot(zeroValue),
     IofValue: toSnapshot(iofValue1),
@@ -56,7 +55,7 @@ const duplicates: Entity.Duplicate[] = [
     ProtestType: '00', // It will change to use an enum
     Receipt: '4648',
     GSI7PK: 'COMPANY#ID#81e1102c-416d-4442-9349-351ae403e0b8',
-    GSI7SK: `DUPLICATE#STATUS#${DuplicateStatus.done}`,
+    GSI7SK: `DUPLICATE#STATUS#${DuplicateStatus.DONE}`,
     GSI8PK: `FACTORY#ID#${factory1.Id}`,
     GSI8SK: `DUPLICATE#DUE_DATE#${dueDate1}`,
     GSI9PK: `CLIENT#ID#${client1.Id}`,
@@ -73,14 +72,14 @@ const duplicates: Entity.Duplicate[] = [
     PK: 'COMPANY#ID#81e1102c-416d-4442-9349-351ae403e0b8',
     SK: 'DUPLICATE#ID#9e959255-df86-4223-a360-660b9159d11c',
     Id: '9e959255-df86-4223-a360-660b9159d11c',
-    Entity: Entity.Duplicate,
-    Status: DuplicateStatus.pending,
+    Entity: EntityTypesEnum.Duplicate,
+    Status: DuplicateStatus.PENDING,
     DuplicateNumber: '4647001',
     DuplicateDate: '2021-05-07',
     DueDate: dueDate2,
     PaymentDate: '2021-01-31',
     BankNumber: '',
-    Desagio: 15,
+    Desagio: BigInt(15),
     DesagioValue: toSnapshot(desagioValue2),
     CostValue: toSnapshot(zeroValue),
     IofValue: toSnapshot(iofValue2),
@@ -91,7 +90,7 @@ const duplicates: Entity.Duplicate[] = [
     ProtestType: '00', // It will change to use an enum
     Receipt: '4647',
     GSI7PK: 'COMPANY#ID#81e1102c-416d-4442-9349-351ae403e0b8',
-    GSI7SK: `DUPLICATE#STATUS#${DuplicateStatus.pending}`,
+    GSI7SK: `DUPLICATE#STATUS#${DuplicateStatus.PENDING}`,
     GSI8PK: `FACTORY#ID#${factory2.Id}`,
     GSI8SK: `DUPLICATE#DUE_DATE#${dueDate2}`,
     GSI9PK: `CLIENT#ID#${client2.Id}`,

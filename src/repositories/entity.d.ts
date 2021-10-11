@@ -1,11 +1,9 @@
-import { DineroSnapshot } from 'dinero.js';
-
 const enum DuplicateStatus {
-  regularPayment = 'REGULAR_PAYMENT',
-  notaryPayment = 'NOTARY_PAYMENT',
-  protested = 'PROTESTED',
-  pending = 'PENDING',
-  done = 'DONE',
+  REGULAR_PAYMENT = 'REGULAR_PAYMENT',
+  NOTARY_PAYMENT = 'NOTARY_PAYMENT',
+  PROTESTED = 'PROTESTED',
+  PENDING = 'PENDING',
+  DONE = 'DONE',
 }
 
 const enum EntityTypesEnum {
@@ -23,6 +21,18 @@ const enum ContactTypeEnum {
   Email = 'Email',
   Phone = 'Phone',
 }
+
+type Currency<TAmount> = {
+  readonly code: string;
+  readonly base: TAmount;
+  readonly exponent: TAmount;
+};
+
+type DineroSnapshot<TAmount> = {
+  readonly amount: TAmount;
+  readonly currency: Currency<TAmount>;
+  readonly scale: TAmount;
+};
 
 declare namespace Entity {
   type Id = string;
@@ -62,7 +72,7 @@ declare namespace Entity {
     Address: Address;
     Account: Account;
     TaxConfiguration: TaxConfiguration;
-    Contact: Contact;
+    Contact: Contact[];
   }
 
   interface Transaction extends BaseEntity<'Transaction', `COMPANY#ID#${Id}`, `TRANSACTION#ID#${Id}`> {
@@ -77,7 +87,6 @@ declare namespace Entity {
 
   interface Factory extends BaseEntity<'Factory', `COMPANY#ID#${Id}`, `FACTORY#ID#${Id}`> {
     Name: Name;
-    BusinessId: BusinessId;
     ContractNumber: ContractNumber;
     Address: Address;
     Contact: Contact;
@@ -90,7 +99,7 @@ declare namespace Entity {
     Address: Address;
     Contact: Contact;
     GSI3PK: `COMPANY#ID#${Id}`;
-    GSI3SK: `FACTORY#NAME#${Name}`;
+    GSI3SK: `CLIENT#NAME#${Name}`;
   }
 
   interface Cession extends BaseEntity<'Cession', `COMPANY#ID#${Id}`, `CESSION#ID#${Id}`> {
@@ -149,7 +158,7 @@ declare namespace Entity {
 
   interface Address {
     name?: string;
-    addressNumber: string;
+    addressNumber?: string;
     line1: string;
     line2?: string;
     city: string;
@@ -171,12 +180,11 @@ declare namespace Entity {
     agreement: string;
     wallet: string;
     walletVariation: string;
-    interest: string;
+    interest?: string;
     instruction1: string;
     instruction2: string;
   }
 
-  // TODO Fill the tax configuration up
   interface TaxConfiguration {
     pis: string;
     cofins: string;
@@ -185,10 +193,21 @@ declare namespace Entity {
     pisPercentage: string;
     cofinsPercentage: string;
     iofPercentage: string;
+    iofAdditionalPercentage: string;
     irrfPercentage: string;
-    pisNumber: string;
-    cofinsNumber: string;
-    iofNumber: string;
-    irrfNumber: string;
+    pisNumber?: string;
+    cofinsNumber?: string;
+    iofNumber?: string;
+    irrfNumber?: string;
   }
+
+  type Any =
+    | Company
+    | Transaction
+    | Factory
+    | Client
+    | Cession
+    | Quote
+    | Iof
+    | Duplicate;
 }

@@ -10,3 +10,4 @@ docker-compose.yml
 .env
 .dynamodb
 .build
+/src/test/.env.test
