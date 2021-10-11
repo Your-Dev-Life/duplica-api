@@ -1,10 +1,7 @@
-import { createCompanyEntity, putItem } from "app/test/helpers";
+import { createCompanyEntity, putItem } from 'app/test/helpers';
+import { getListOfCompanies } from 'app/repositories/companies';
 
-import Company = Entity.Company;
-import { getListOfCompanies } from "app/repositories/companies";
-
-// const companies: Company[] = [];
-let company: Company;
+let company: Entity.Company;
 
 describe('Companies', () => {
   beforeAll(async () => {

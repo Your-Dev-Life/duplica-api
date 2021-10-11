@@ -201,13 +201,5 @@ declare namespace Entity {
     irrfNumber?: string;
   }
 
-  type Any =
-    | Company
-    | Transaction
-    | Factory
-    | Client
-    | Cession
-    | Quote
-    | Iof
-    | Duplicate;
+  type Any = Company | Transaction | Factory | Client | Cession | Quote | Iof | Duplicate;
 }
