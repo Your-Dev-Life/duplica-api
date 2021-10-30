@@ -64,7 +64,7 @@ export const createCompanyEntity = (id: string = v4(), attributes: Partial<Entit
     iofNumber: '6895',
     irrfNumber: '0',
   },
-  Contact: [
+  Contacts: [
     {
       name: 'Commercial',
       type: ContactTypeEnum.Phone,

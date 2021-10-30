@@ -36,7 +36,7 @@ const TaxConfiguration: Entity.TaxConfiguration = {
   irrfNumber: '0',
 };
 
-const CompanyContact: Entity.Contact[] = [
+const CompanyContacts: Entity.Contact[] = [
   {
     name: 'Commercial',
     type: ContactTypeEnum.Phone,
@@ -55,7 +55,7 @@ const companies: Entity.Company[] = [
     Address: CompanyAddress,
     Account,
     TaxConfiguration,
-    Contact: CompanyContact,
+    Contacts: CompanyContacts,
     CreatedAt: '2021-01-01T3:00:00.000Z',
   },
 ];

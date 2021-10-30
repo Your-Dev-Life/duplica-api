@@ -22,7 +22,7 @@ To be able to run dynamodb locally, you first have to install Java on your machi
 First, [download and install the Azul Zulu build of OpenJDK](https://www.azul.com/downloads/?version=java-16-sts&os=macos&architecture=x86-64-bit&package=jdk).
 Then, check that the version of Java used in your Rosetta terminal is JDK 16 with `java -version`.
 
-In case a different version of Java is used, [switch it from the terminal](https://docs.azul.com/core/zulu-openjdk/manage-multiple-zulu-versions/macos). If that still doesn't work, make sure that the _JAVA_HOME_ path in your _~/.bash_profile_ is pointing to the *zulu-15.jdk* folder.
+In case a different version of Java is used, [switch it from the terminal](https://docs.azul.com/core/zulu-openjdk/manage-multiple-zulu-versions/macos). If that still doesn't work, make sure that the *JAVA_HOME* path in your *~/.bash_profile* is pointing to the *zulu-15.jdk* folder.
 
 #### Install dynamodb-local
 
@@ -40,11 +40,11 @@ To run the project using serverless you will need to first configure AWS credent
 Request an AWS access key and secret key from the project admin.
 
 ## Project setup
-
-1. Configure serverless to use your AWS credentials: `serverless config credentials --provider aws --key YOUR_AWS_ACCESS_KEY --secret YOUR_AWS_SECRET_KEY`
-2. You need to configure your environment variables. Copy the `.env.example` file at the root to a new file called `.env` and set the correct value for the variables (ask someone in the team). The _.env_ file is not versioned, so any sensitive data it may contain will never be pushed on the remote repository.
-3. Then, you can install the dependencies by running `npm install` from the root folder of the project.
-4. Finally, you have to download dynamodb locally by running: `npm run db:install` (Only if you don't sync dev to local).
+    
+ 1. Configure serverless to use your AWS credentials: `serverless config credentials --provider aws --key YOUR_AWS_ACCESS_KEY --secret YOUR_AWS_SECRET_KEY`
+ 2. You need to configure your environment variables. Copy the `.env.example` file at the root to a new file called `.env` and set the correct value for the variables (ask someone in the team). The `.env` file is not versioned, so any sensitive data it may contain will never be pushed on the remote repository.
+ 3. Then, you can install the dependencies by running `npm install` from the root folder of the project.
+ 4. Finally, you have to download dynamodb locally by running: `npm run db:install` (Only if you don't sync dev to local).
 
 ## Running the project
 

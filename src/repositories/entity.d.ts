@@ -72,7 +72,7 @@ declare namespace Entity {
     Address: Address;
     Account: Account;
     TaxConfiguration: TaxConfiguration;
-    Contact: Contact[];
+    Contacts: Contact[];
   }
 
   interface Transaction extends BaseEntity<'Transaction', `COMPANY#ID#${Id}`, `TRANSACTION#ID#${Id}`> {
